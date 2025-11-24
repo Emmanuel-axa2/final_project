@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>🧱 Build a CV from scratch</h2>
+    <form method="post">
+        <label>Full name</label>
+        <input type="text" name="full_name" required>
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <label>Phone (optional)</label>
+        <input type="text" name="phone">
+
+        <label>Profile summary</label>
+        <textarea name="summary" rows="3" placeholder="Short intro about you"></textarea>
+
+        <label>Education</label>
+        <textarea name="education" rows="4" placeholder="Degree, university, dates, key modules"></textarea>
+
+        <label>Experience</label>
+        <textarea name="experience" rows="4" placeholder="Jobs, internships, volunteering"></textarea>
+
+        <label>Projects</label>
+        <textarea name="projects" rows="4" placeholder="University or personal projects"></textarea>
+
+        <label>Skills</label>
+        <textarea name="skills" rows="3" placeholder="Python, communication, teamwork, etc."></textarea>
+
+        <label>Target job role</label>
+        <input type="text" name="target_role" placeholder="e.g. Junior Software Developer">
+
+        <button type="submit" class="btn">Generate CV (placeholder)</button>
+    </form>
+</div>
+
+{% if generated_cv %}
+<div class="card">
+    <h2>📄 CV Preview (Basic Placeholder)</h2>
+    <pre>{{ generated_cv }}</pre>
+    <p>This will later be improved and polished by the LLM.</p>
+</div>
+{% endif %}
+{% endblock %}

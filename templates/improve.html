@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>🔧 Improve my existing CV</h2>
+    <form method="post">
+        <label>Paste your CV text</label>
+        <textarea name="cv_text" rows="10" placeholder="Paste your CV here (text only)"></textarea>
+
+        <label>Target job / role (optional but recommended)</label>
+        <input type="text" name="target_role" placeholder="e.g. 'Data Analyst', 'Software Engineer Graduate'">
+
+        <button type="submit" class="btn">Analyse & suggest improvements (placeholder)</button>
+    </form>
+</div>
+
+{% if result %}
+<div class="card">
+    <h3>✅ Suggestions (Placeholder)</h3>
+    <ul>
+        {% for s in result.suggestions %}
+        <li>{{ s }}</li>
+        {% endfor %}
+    </ul>
+    <p><strong>Confidence:</strong> {{ result.confidence }}</p>
+</div>
+
+{% if result.improved_text %}
+<div class="card">
+    <h3>📄 Improved CV (Placeholder – same as input for now)</h3>
+    <pre>{{ result.improved_text }}</pre>
+    <p>This will later be replaced by an improved version from the LLM.</p>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

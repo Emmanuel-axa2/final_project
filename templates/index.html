@@ -1,0 +1,25 @@
+{% block content %}
+<div class="card" style="max-width: 650px; margin: auto; padding: 30px; text-align: center;">
+
+    <h1 style="font-size: 2.2rem; margin-bottom: 10px;">Welcome to the AI CV Assistant</h1>
+    <p style="font-size: 1.1rem; color: #555; margin-bottom: 25px;">
+        This tool helps you quickly build a professional CV or improve an existing one using AI-powered guidance.
+        Choose an option below to begin.
+    </p>
+
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('build_cv') }}"
+           class="btn"
+           style="display: block; width: 100%; padding: 18px; margin-bottom: 15px; font-size: 1.2rem;">
+            🧱 Build a CV from Scratch
+        </a>
+
+        <a href="{{ url_for('improve_cv') }}"
+           class="btn btn-secondary"
+           style="display: block; width: 100%; padding: 18px; font-size: 1.2rem;">
+            🔧 Improve My Existing CV
+        </a>
+    </div>
+
+</div>
+{% endblock %}
