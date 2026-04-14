@@ -1,0 +1,11 @@
+{% if cv %}
+  {% if template_id == "sidebar" %}
+    {% include "templates/cv_templates/sidebar.html" %}
+  {% elif template_id == "classic" %}
+    {% include "templates/cv_templates/classic.html" %}
+  {% else %}
+    {% include "templates/cv_templates/modern.html" %}
+  {% endif %}
+{% else %}
+  <div class="cv-preview {{ template_id }}">{{ result.improved_text | e }}</div>
+{% endif %}

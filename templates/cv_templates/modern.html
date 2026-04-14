@@ -1,0 +1,22 @@
+<div class="cv modern">
+  <div class="cv-head">
+    <div class="cv-name">{{ cv.name }}</div>
+    <div class="cv-contact">{{ cv.contact }}</div>
+  </div>
+
+  {% for sec in ["PROFILE","EDUCATION","CERTIFICATIONS","EXPERIENCE","PROJECTS","SKILLS"] %}
+    {% if cv.sections.get(sec) %}
+      <h3 class="cv-sec">{{ sec }}</h3>
+      <ul class="cv-list">
+        {% for line in cv.sections[sec] %}
+          {% set t = line.strip() %}
+          {% if t.startswith("•") %}
+            <li>{{ t[1:].strip() }}</li>
+          {% else %}
+            <li>{{ t }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endfor %}
+</div>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+
+  <!-- If you have a CSS file, include it here -->
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+
+  <style>
+    /* Hide anything extra on print pages (if ever added) */
+    .no-print { display: none !important; }
+
+    /* Make it look like a real PDF page */
+    body { background: white; margin: 0; padding: 0; }
+    .page { padding: 24px; }
+  </style>
+</head>
+
+<body onload="window.print()">
+  <div class="page">
+    {% if template_id == "sidebar" %}
+      {% include "cv_templates/sidebar.html" %}
+    {% elif template_id == "classic" %}
+      {% include "cv_templates/classic.html" %}
+    {% else %}
+      {% include "cv_templates/modern.html" %}
+    {% endif %}
+  </div>
+</body>
+</html>

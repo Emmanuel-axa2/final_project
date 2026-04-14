@@ -1,0 +1,780 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.3rem 0.75rem 0.3rem 0.5rem;
+    border-radius: 999px;
+    background: var(--surface-inset);
+    border: 1px solid var(--rule-mid);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-label-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--emerald);
+    box-shadow: 0 0 0 2px var(--emerald-muted);
+    flex-shrink: 0;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-300);
+    margin-bottom: 0.6rem;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-16);
+    padding: 1.5rem;
+    box-shadow: var(--e-1);
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  }
+
+  .feature-card:hover {
+    box-shadow: var(--e-3);
+    transform: translateY(-2px);
+    border-color: var(--rule-mid);
+  }
+
+  .feature-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--r-8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+  }
+
+  .step-num {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--ink-100);
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-val {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--ink-900);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .trust-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--ink-500);
+    font-weight: 500;
+  }
+
+  .trust-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--emerald-muted);
+    border: 1px solid var(--emerald-rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: var(--emerald);
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+
+  .cv-preview-card {
+    background: var(--surface);
+    border: 1px solid var(--rule-mid);
+    border-radius: var(--r-16);
+    overflow: hidden;
+    box-shadow: var(--e-3);
+  }
+
+  .cv-preview-bar {
+    padding: 10px 14px;
+    background: var(--surface-inset);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cv-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .faq-item {
+    border: 1px solid var(--rule);
+    border-radius: var(--r-12);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .faq-item:hover { border-color: var(--rule-mid); }
+
+  .faq-item summary {
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ink-900);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: '+'; font-size: 1.1rem; color: var(--ink-300); font-weight: 300; float: none; }
+  .faq-item[open] summary::after { content: '−'; }
+
+  .faq-body {
+    padding: 0 1.25rem 1rem;
+    font-size: 0.875rem;
+    color: var(--ink-500);
+    line-height: 1.7;
+    border-top: 1px solid var(--rule);
+  }
+
+  .review-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-16);
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--e-1);
+  }
+</style>
+
+<!-- ══════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════ -->
+<section style="padding: 1rem 0 2.5rem;">
+  <div style="
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 4rem;
+      align-items: center;
+  ">
+
+    <!-- Left -->
+    <div class="fade-up">
+      <div class="hero-label">
+        <span class="hero-label-dot"></span>
+        Final-year research prototype &nbsp;·&nbsp; NLP + LLM pipeline
+      </div>
+
+      <h1 style="
+          font-family: var(--font-serif);
+          font-size: 3rem;
+          font-weight: 600;
+          line-height: 1.1;
+          letter-spacing: -0.02em;
+          color: var(--ink-900);
+          margin-bottom: 1.25rem;
+          max-width: 580px;
+      ">
+        AI-assisted CV optimisation<br>
+        <span style="color: var(--accent);">for graduate applicants</span>
+      </h1>
+
+      <p style="
+          font-size: 0.95rem;
+          color: var(--ink-500);
+          line-height: 1.75;
+          max-width: 520px;
+          margin-bottom: 2rem;
+      ">
+        Upload your CV or build one from scratch. The system analyses how well
+        your CV matches a job description using AI scoring, identifies missing
+        keywords, and rewrites weak sections — then explains every change it makes
+        so you stay in control.
+      </p>
+
+      <!-- CTA row -->
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 2rem;">
+        <a href="{{ url_for('start_build') }}" class="btn btn-primary btn-lg">
+          Build CV from scratch
+        </a>
+        <a href="{{ url_for('start_improve') }}" class="btn btn-outline btn-lg">
+          Upload &amp; improve existing CV
+        </a>
+      </div>
+
+      <!-- Trust signals -->
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem 2rem;">
+        <div class="trust-row">
+          <div class="trust-check">✓</div>
+          No account required
+        </div>
+        <div class="trust-row">
+          <div class="trust-check">✓</div>
+          Nothing saved after your session ends
+        </div>
+        <div class="trust-row">
+          <div class="trust-check">✓</div>
+          AI explains every suggestion it makes
+        </div>
+        <div class="trust-row">
+          <div class="trust-check">✓</div>
+          Won't invent experience you don't have
+        </div>
+      </div>
+
+      <p style="
+          margin-top: 1.25rem;
+          font-size: 0.78rem;
+          color: var(--ink-300);
+          font-family: var(--font-code);
+          letter-spacing: 0.02em;
+      ">
+        Stack: Flask · Groq (llama-3.1-8b-instant) · scikit-learn TF-IDF · WeasyPrint · SQLite
+      </p>
+    </div>
+
+    <!-- Right: CV preview mockup -->
+    <div class="fade-up-2">
+      <div class="cv-preview-card">
+
+        <!-- Window chrome -->
+        <div class="cv-preview-bar">
+          <div class="cv-dot" style="background:#ef4444;"></div>
+          <div class="cv-dot" style="background:#f59e0b;"></div>
+          <div class="cv-dot" style="background:#22c55e;"></div>
+          <span style="
+              margin-left: 8px;
+              font-size: 0.72rem;
+              color: var(--ink-300);
+              font-family: var(--font-code);
+              letter-spacing: 0.02em;
+          ">cv_assistant · match_analysis</span>
+        </div>
+
+        <div style="padding: 20px 22px;">
+
+          <!-- Score row -->
+          <div style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              margin-bottom: 16px;
+          ">
+            <div>
+              <div style="font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-300); margin-bottom: 4px;">Hybrid Match Score</div>
+              <div style="
+                  font-family: var(--font-serif);
+                  font-size: 2.2rem;
+                  font-weight: 600;
+                  color: var(--ink-900);
+                  line-height: 1;
+                  letter-spacing: -0.02em;
+              ">74<span style="font-size: 1.1rem; color: var(--ink-300);">/100</span></div>
+            </div>
+            <div style="text-align: right;">
+              <span class="pill pill-green" style="font-size: 0.68rem;">🟢 Moderate–Strong</span>
+              <div style="margin-top: 6px; font-size: 0.72rem; color: var(--ink-300); font-family: var(--font-code);">40% TF-IDF · 60% overlap</div>
+            </div>
+          </div>
+
+          <!-- Score bars -->
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px;">
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 0.72rem; font-weight: 600; color: var(--ink-500);">TF-IDF Cosine</span>
+                <span style="font-size: 0.72rem; font-family: var(--font-code); color: var(--ink-500);">68%</span>
+              </div>
+              <div class="score-bar-track">
+                <div class="score-bar-fill" style="width: 68%; background: var(--accent);"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 0.72rem; font-weight: 600; color: var(--ink-500);">Keyword Overlap</span>
+                <span style="font-size: 0.72rem; font-family: var(--font-code); color: var(--ink-500);">78%</span>
+              </div>
+              <div class="score-bar-track">
+                <div class="score-bar-fill" style="width: 78%; background: var(--emerald);"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider" style="margin: 14px 0;"></div>
+
+          <!-- Keywords -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <div style="font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-300); margin-bottom: 8px;">Matched</div>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                {% for kw in ['Python', 'Flask', 'REST API', 'SQL'] %}
+                <div style="
+                    font-size: 0.75rem;
+                    padding: 3px 8px;
+                    border-radius: var(--r-4);
+                    background: var(--emerald-muted);
+                    border: 1px solid var(--emerald-rule);
+                    color: var(--emerald);
+                    font-weight: 600;
+                    font-family: var(--font-code);
+                ">{{ kw }}</div>
+                {% endfor %}
+              </div>
+            </div>
+            <div>
+              <div style="font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-300); margin-bottom: 8px;">Missing</div>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                {% for kw in ['Docker', 'CI/CD', 'AWS'] %}
+                <div style="
+                    font-size: 0.75rem;
+                    padding: 3px 8px;
+                    border-radius: var(--r-4);
+                    background: var(--gold-muted);
+                    border: 1px solid var(--gold-rule);
+                    color: var(--gold);
+                    font-weight: 600;
+                    font-family: var(--font-code);
+                ">{{ kw }}</div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <!-- LLM suggestion -->
+          <div style="
+              padding: 10px 12px;
+              border-radius: var(--r-8);
+              background: var(--accent-muted);
+              border: 1px solid var(--accent-border);
+          ">
+            <div style="font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px;">LLM suggestion</div>
+            <p style="font-size: 0.78rem; color: var(--ink-700); line-height: 1.55; margin: 0;">
+              Incorporate deployment keywords (Docker, CI/CD) into your experience section and quantify impact with concrete metrics.
+            </p>
+          </div>
+
+          <p style="
+              margin-top: 12px;
+              font-size: 0.7rem;
+              color: var(--ink-300);
+              font-family: var(--font-code);
+              text-align: center;
+          ">
+            preview — results generated dynamically from your inputs
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     STATS ROW
+══════════════════════════════════════════════════ -->
+<section style="
+    margin: 0.5rem 0 2.5rem;
+    padding: 1.5rem 2rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-16);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    box-shadow: var(--e-1);
+" class="fade-up-3">
+  <div>
+    <div class="stat-val">3</div>
+    <div style="font-size: 0.8rem; color: var(--ink-500); margin-top: 4px;">Core AI tools</div>
+    <div style="font-size: 0.72rem; color: var(--ink-300); font-family: var(--font-code); margin-top: 2px;">Build · Improve · Match</div>
+  </div>
+  <div>
+    <div class="stat-val">TF-IDF</div>
+    <div style="font-size: 0.8rem; color: var(--ink-500); margin-top: 4px;">CV–job similarity scoring</div>
+    <div style="font-size: 0.72rem; color: var(--ink-300); font-family: var(--font-code); margin-top: 2px;">measures how closely your CV matches</div>
+  </div>
+  <div>
+    <div class="stat-val">8B</div>
+    <div style="font-size: 0.8rem; color: var(--ink-500); margin-top: 4px;">Parameter language model</div>
+    <div style="font-size: 0.72rem; color: var(--ink-300); font-family: var(--font-code); margin-top: 2px;">llama-3.1-8b-instant · Groq</div>
+  </div>
+  <div>
+    <div class="stat-val">0</div>
+    <div style="font-size: 0.8rem; color: var(--ink-500); margin-top: 4px;">Files or CVs stored</div>
+    <div style="font-size: 0.72rem; color: var(--ink-300); font-family: var(--font-code); margin-top: 2px;">everything clears when you leave</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     FEATURES
+══════════════════════════════════════════════════ -->
+<section style="margin-bottom: 3rem;" class="fade-up">
+  <div style="margin-bottom: 1.75rem;">
+    <div class="section-label">Capabilities</div>
+    <h2 style="
+        font-family: var(--font-serif);
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--ink-900);
+        margin: 0 0 0.5rem;
+    ">
+      What the assistant does
+    </h2>
+    <p style="font-size: 0.9rem; color: var(--ink-500); max-width: 600px; line-height: 1.7; margin: 0;">
+      Three tools work together to cover the full process — writing your CV,
+      improving it, and checking how well it fits a specific job.
+    </p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
+
+    <div class="feature-card" style="border-top: 2px solid var(--accent);">
+      <div class="feature-icon" style="background: var(--accent-muted); border: 1px solid var(--accent-border);">
+        🧱
+      </div>
+      <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--ink-900); margin: 0 0 0.5rem;">
+        CV builder
+      </h3>
+      <p style="font-size: 0.845rem; color: var(--ink-500); line-height: 1.65; margin: 0;">
+        Fill in a structured form with your education, work experience, projects,
+        and skills. The AI turns your notes into a professionally written,
+        recruiter-friendly CV — tailored to the role you're targeting.
+      </p>
+      <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--rule);">
+        <a href="{{ url_for('start_build') }}" class="btn btn-outline btn-sm">
+          Open CV builder →
+        </a>
+      </div>
+    </div>
+
+    <div class="feature-card" style="border-top: 2px solid var(--emerald);">
+      <div class="feature-icon" style="background: var(--emerald-muted); border: 1px solid var(--emerald-rule);">
+        ✍️
+      </div>
+      <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--ink-900); margin: 0 0 0.5rem;">
+        CV improver
+      </h3>
+      <p style="font-size: 0.845rem; color: var(--ink-500); line-height: 1.65; margin: 0;">
+        Upload a PDF, Word doc, or paste your existing CV as text. The AI
+        identifies weak sections, rewrites them with stronger language, and
+        gives you a confidence score alongside a list of exactly what was changed and why.
+      </p>
+      <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--rule);">
+        <a href="{{ url_for('start_improve') }}" class="btn btn-outline btn-sm">
+          Open CV improver →
+        </a>
+      </div>
+    </div>
+
+    <div class="feature-card" style="border-top: 2px solid var(--gold);">
+      <div class="feature-icon" style="background: var(--gold-muted); border: 1px solid var(--gold-rule);">
+        🎯
+      </div>
+      <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--ink-900); margin: 0 0 0.5rem;">
+        Job match scorer
+      </h3>
+      <p style="font-size: 0.845rem; color: var(--ink-500); line-height: 1.65; margin: 0;">
+        Paste a job description alongside your CV and get a match score out of 100.
+        The system highlights keywords the job requires that your CV is missing,
+        then lets you send those gaps directly to the improver with one click.
+      </p>
+      <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--rule);">
+        <a href="{{ url_for('match_job') }}" class="btn btn-outline btn-sm">
+          Open job match →
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════════════ -->
+<section style="margin-bottom: 3rem;" class="fade-up-2">
+  <div style="margin-bottom: 1.75rem;">
+    <div class="section-label">Pipeline</div>
+    <h2 style="
+        font-family: var(--font-serif);
+        font-size: 1.8rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--ink-900);
+        margin: 0;
+    ">
+      How it works under the hood
+    </h2>
+  </div>
+
+  <div style="
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-16);
+      overflow: hidden;
+  ">
+    <div style="background: var(--surface); padding: 1.75rem;">
+      <div class="step-num">01</div>
+      <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--ink-900); margin: 0 0 0.6rem;">
+        Your content comes in
+      </h3>
+      <p style="font-size: 0.845rem; color: var(--ink-500); line-height: 1.65; margin: 0;">
+        You fill in a form or upload a file. The system reads PDF and Word
+        documents automatically to extract your CV text — nothing is stored,
+        it only lives in memory while you're using the tool.
+      </p>
+    </div>
+
+    <div style="background: var(--surface); padding: 1.75rem;">
+      <div class="step-num">02</div>
+      <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--ink-900); margin: 0 0 0.6rem;">
+        The AI scores and analyses
+      </h3>
+      <p style="font-size: 0.845rem; color: var(--ink-500); line-height: 1.65; margin: 0;">
+        If you provide a job description, two scoring methods run in parallel —
+        one measures how similar the language is (TF-IDF), another checks for
+        specific keyword matches. Both scores are blended into a single result.
+      </p>
+    </div>
+
+    <div style="background: var(--surface); padding: 1.75rem;">
+      <div class="step-num">03</div>
+      <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--ink-900); margin: 0 0 0.6rem;">
+        Improvements are generated
+      </h3>
+      <p style="font-size: 0.845rem; color: var(--ink-500); line-height: 1.65; margin: 0;">
+        The AI rewrites your CV sections using the analysis as context,
+        returning the improved text alongside a breakdown of what was changed,
+        what weaknesses were fixed, and a confidence rating for the output.
+      </p>
+    </div>
+  </div>
+
+  <!-- Tech note -->
+  <div style="
+      margin-top: 1rem;
+      padding: 0.85rem 1.25rem;
+      background: var(--surface-inset);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-8);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+  ">
+    <span style="font-family: var(--font-code); font-size: 0.72rem; color: var(--accent); font-weight: 700; flex-shrink: 0; padding-top: 1px;">NOTE</span>
+    <p style="font-size: 0.8rem; color: var(--ink-500); line-height: 1.55; margin: 0;">
+      The AI will never invent jobs, qualifications, or achievements you didn't provide.
+      It is explicitly instructed to only rewrite and reframe what you give it —
+      improving clarity and impact, not fabricating content.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     FAQ + REVIEWS
+══════════════════════════════════════════════════ -->
+<section style="
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 3rem;
+    align-items: start;
+    margin-bottom: 3rem;
+" id="faq" class="fade-up-3">
+
+  <!-- FAQ -->
+  <div>
+    <div style="margin-bottom: 1.5rem;">
+      <div class="section-label">Documentation</div>
+      <h2 style="
+          font-family: var(--font-serif);
+          font-size: 1.8rem;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          color: var(--ink-900);
+          margin: 0;
+      ">
+        Frequently asked questions
+      </h2>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+
+      <details class="faq-item">
+        <summary>Is this tool free to use?</summary>
+        <div class="faq-body" style="padding-top: 0.85rem;">
+          Yes, completely. This is a final-year university project built for
+          research and evaluation — there's no payment, no subscription,
+          and no catch.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Is my CV saved anywhere?</summary>
+        <div class="faq-body" style="padding-top: 0.85rem;">
+          No. Your CV text is only kept in memory while your browser session
+          is active. It's sent to an AI model (via Groq's API) to generate
+          improvements, but nothing is written to a database or stored on a server.
+          When you close the tab or click "Start Fresh", it's gone.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>How does the job match score work?</summary>
+        <div class="faq-body" style="padding-top: 0.85rem;">
+          The system runs two checks at once. First, it measures how similar
+          the language in your CV is to the job description using a technique
+          called TF-IDF — think of it as comparing the vocabulary overlap
+          mathematically. Second, the AI extracts specific keywords from the
+          job posting and checks how many appear in your CV. Both results are
+          combined into a single score out of 100.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Will the AI make things up about me?</summary>
+        <div class="faq-body" style="padding-top: 0.85rem;">
+          No. The AI is explicitly instructed not to invent experience,
+          qualifications, or achievements. It can only rewrite and improve
+          what you've already provided — making your real experience
+          sound clearer and more compelling.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>Who is this for?</summary>
+        <div class="faq-body" style="padding-top: 0.85rem;">
+          Primarily students, recent graduates, and early-career applicants
+          looking for internships or entry-level roles — especially in
+          technical fields where matching your CV to a job description matters.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>What file types can I upload?</summary>
+        <div class="faq-body" style="padding-top: 0.85rem;">
+          You can upload <span style="font-family: var(--font-code); font-size: 0.85em;">.pdf</span>,
+          <span style="font-family: var(--font-code); font-size: 0.85em;">.docx</span> (Word),
+          or <span style="font-family: var(--font-code); font-size: 0.85em;">.txt</span> files.
+          If your PDF is a scanned image rather than real text, the extraction
+          won't work — paste your CV as plain text instead.
+        </div>
+      </details>
+
+    </div>
+
+    <div style="margin-top: 1.25rem;">
+      <a href="{{ url_for('questions') }}" class="btn btn-outline btn-sm">
+        View community Q&amp;A forum →
+      </a>
+    </div>
+  </div>
+
+  <!-- Reviews -->
+  <div id="reviews">
+    <div style="margin-bottom: 1.5rem;">
+      <div class="section-label">Feedback</div>
+      <h2 style="
+          font-family: var(--font-serif);
+          font-size: 1.8rem;
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          color: var(--ink-900);
+          margin: 0;
+      ">
+        Leave a review
+      </h2>
+    </div>
+
+    <div class="card" style="padding: 1.5rem; margin-bottom: 1.25rem;">
+      <form method="post" action="{{ url_for('add_review') }}">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+
+          <div>
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Your name" required>
+          </div>
+
+          <div>
+            <label>Review</label>
+            <textarea name="review" rows="4"
+              placeholder="How did the tool perform? What could be improved?"
+              required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            Submit feedback
+          </button>
+
+        </div>
+      </form>
+    </div>
+
+    {% if reviews %}
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        {% for r in reviews %}
+          <div class="review-card">
+            <div style="
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 10px;
+                margin-bottom: 0.6rem;
+            ">
+              <span style="font-weight: 700; font-size: 0.875rem; color: var(--ink-900);">
+                {{ r.name }}
+              </span>
+              <span style="
+                  font-size: 0.72rem;
+                  color: var(--ink-300);
+                  font-family: var(--font-code);
+                  white-space: nowrap;
+              ">{{ r.ts }}</span>
+            </div>
+            <p style="font-size: 0.855rem; color: var(--ink-500); line-height: 1.6; margin: 0;">
+              {{ r.text }}
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="
+          padding: 1.5rem;
+          text-align: center;
+          border: 1px dashed var(--rule-mid);
+          border-radius: var(--r-12);
+      ">
+        <p style="font-size: 0.845rem; color: var(--ink-300); margin: 0;">
+          No reviews yet — be the first to leave feedback.
+        </p>
+      </div>
+    {% endif %}
+  </div>
+
+</section>
+
+{% endblock %}

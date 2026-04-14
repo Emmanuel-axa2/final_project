@@ -1,0 +1,102 @@
+{# templates/cv_templates/sidebar.html #}
+
+{% set side_sections = ["SKILLS", "CERTIFICATIONS", "EDUCATION"] %}
+{% set right_order = ["PROFILE", "EXPERIENCE", "PROJECTS"] %}
+
+{% macro clean_line(line) -%}
+  {{ (line or "") | replace("•", "") | trim }}
+{%- endmacro %}
+
+<div class="cv sidebar">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="side">
+
+    <!-- NAME -->
+    {% if cv and cv.name %}
+      <div class="side-title">{{ cv.name }}</div>
+    {% endif %}
+
+    <!-- CONTACT -->
+    {% if cv and cv.contact %}
+      <div class="side-contact">
+        {% for part in cv.contact.split('|') %}
+          {% set p = part.strip() %}
+
+          {# Email #}
+          {% if "@" in p and not p.startswith("http") %}
+            <div><a href="mailto:{{ p }}">{{ p }}</a></div>
+
+          {# Phone (basic detection) #}
+          {% elif p.replace("+","").replace(" ","").replace("-","").replace("(","").replace(")","").isdigit() %}
+            <div>{{ p }}</div>
+
+          {# LinkedIn #}
+          {% elif "linkedin.com" in p %}
+            <div><a href="{{ p }}" target="_blank" rel="noopener">LinkedIn</a></div>
+
+          {# GitHub #}
+          {% elif "github.com" in p %}
+            <div><a href="{{ p }}" target="_blank" rel="noopener">GitHub</a></div>
+
+          {# Other Website #}
+          {% elif p.startswith("http") %}
+            <div><a href="{{ p }}" target="_blank" rel="noopener">Website</a></div>
+
+          {% else %}
+            <div>{{ p }}</div>
+          {% endif %}
+
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- SIDEBAR SECTIONS -->
+    {% if cv and cv.sections %}
+      {% for sec in side_sections %}
+        {% set items = cv.sections.get(sec, []) %}
+        {% if items %}
+          <div class="side-sec">{{ sec }}</div>
+          <ul class="side-list">
+            {% for line in items %}
+              <li>{{ clean_line(line) }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+  </aside>
+
+  <!-- RIGHT MAIN CONTENT -->
+  <main class="main">
+
+    {# Ordered main sections #}
+    {% if cv and cv.sections %}
+      {% for sec in right_order %}
+        {% set items = cv.sections.get(sec, []) %}
+        {% if items %}
+          <div class="cv-sec">{{ sec }}</div>
+          <ul class="cv-list">
+            {% for line in items %}
+              <li>{{ clean_line(line) }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endfor %}
+
+      {# Render any extra sections dynamically (excluding sidebar ones and ordered ones) #}
+      {% for sec, items in cv.sections.items() %}
+        {% if sec not in side_sections and sec not in right_order and items %}
+          <div class="cv-sec">{{ sec }}</div>
+          <ul class="cv-list">
+            {% for line in items %}
+              <li>{{ clean_line(line) }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </main>
+</div>
+

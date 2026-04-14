@@ -1,0 +1,18 @@
+<div class="cv classic">
+  <div class="cv-head">
+    <div class="cv-name">{{ cv.name }}</div>
+    <div class="cv-contact">{{ cv.contact }}</div>
+  </div>
+
+  {% for sec in ["PROFILE","EDUCATION","CERTIFICATIONS","EXPERIENCE","PROJECTS","SKILLS"] %}
+    {% if cv.sections.get(sec) %}
+      <h2 class="cv-sec">{{ sec }}</h2>
+      <ul class="cv-list">
+        {% for line in cv.sections[sec] %}
+          {% set t = line.strip() %}
+          <li>{{ t.lstrip("•").strip() }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endfor %}
+</div>

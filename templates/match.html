@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="max-width: 1060px; margin: 0 auto;">
+
+  <!-- Header -->
+  <div class="card fade-up" style="padding: 26px; margin-bottom: 16px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+      <div>
+        <span class="pill pill-blue" style="margin-bottom: 10px;">🎯 Job Match</span>
+        <h1 style="margin: 10px 0 8px; font-size:1.75rem; font-weight:800;">CV vs Job Description</h1>
+        <p class="muted" style="margin:0; line-height:1.6; max-width:560px;">
+          Upload your CV or paste it below, then paste a job description to see
+          keyword matches, missing skills, and tailoring suggestions.
+        </p>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span class="pill pill-blue">Explainable match</span>
+        <span class="pill pill-green">Skills-focused</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN GRID: Form left, Results right ── -->
+  <div style="display:grid; grid-template-columns: 420px 1fr; gap: 16px; align-items: start;">
+
+    <!-- LEFT: Form (sticky) -->
+    <div style="position: sticky; top: 78px;">
+      <div class="card" style="padding: 24px;">
+        <h3 style="margin: 0 0 16px; font-size:1rem; font-weight:800;">📋 Your details</h3>
+
+        <form method="post" enctype="multipart/form-data" id="match-form">
+
+          <!-- File upload -->
+          <div style="
+              padding: 14px;
+              border-radius: var(--radius-md);
+              background: var(--surface-2);
+              border: 1.5px dashed var(--border-med);
+              margin-bottom: 14px;
+          ">
+            <label style="margin-bottom: 8px;">Upload CV (PDF / DOCX / TXT)</label>
+            <input type="file" name="cv_file" accept=".pdf,.docx,.txt"
+              style="background: var(--surface); border-style: solid;">
+            <p class="muted text-xs" style="margin: 6px 0 0;">
+              Scanned/image PDFs may not extract text correctly.
+            </p>
+          </div>
+
+          <!-- Paste CV -->
+          <div style="margin-bottom: 14px;">
+            <label>Or paste CV text</label>
+            <textarea name="cv_text" rows="7"
+              placeholder="Paste your CV here..."
+              style="margin-top: 6px;"></textarea>
+          </div>
+
+          <!-- Job description -->
+          <div style="margin-bottom: 14px;">
+            <label>Job description <span class="muted text-sm">(required)</span></label>
+            <textarea name="job_desc" rows="8"
+              placeholder="Paste the job description here..." required
+              style="margin-top: 6px;"></textarea>
+
+            <div style="
+                margin-top: 8px;
+                padding: 9px 12px;
+                border-radius: var(--radius-md);
+                background: var(--amber-soft);
+                border: 1px solid rgba(245,158,11,0.25);
+                display: flex;
+                gap: 7px;
+            ">
+              <span style="font-size:0.85rem; flex-shrink:0;">💡</span>
+              <p style="margin:0; font-size:0.78rem; color:#92400e; line-height:1.45;">
+                Paste only <strong>skills, responsibilities &amp; qualifications</strong>.
+                Omit "about us" and "benefits" sections for best accuracy.
+              </p>
+            </div>
+          </div>
+
+          <!-- Target role -->
+          <div style="margin-bottom: 16px;">
+            <label>Target role <span class="muted text-sm">(optional)</span></label>
+            <input type="text" name="target_role"
+              placeholder="e.g. Software Engineer Intern"
+              style="margin-top: 6px;">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; padding:0.7rem;">
+            🔍 Analyse match
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div>
+      {% if not result %}
+        <!-- Empty state -->
+        <div class="card" style="
+            padding: 48px 32px;
+            text-align: center;
+            border: 1.5px dashed var(--border-med);
+            background: var(--surface-2);
+        ">
+          <div style="font-size: 2.5rem; margin-bottom: 14px;">🎯</div>
+          <h3 style="margin:0 0 8px; color:var(--ink-2);">No results yet</h3>
+          <p class="muted text-sm" style="margin:0; max-width:320px; margin:0 auto; line-height:1.6;">
+            Fill in your CV and a job description on the left, then click
+            <strong>Analyse match</strong> to see your results here.
+          </p>
+        </div>
+
+      {% elif result.error %}
+        <div class="card" style="
+            padding: 18px;
+            border-left: 4px solid var(--red);
+            background: rgba(239,68,68,0.06);
+        ">
+          <p style="margin:0; color:#7f1d1d;">
+            <strong>⚠️ Error:</strong> {{ result.error }}
+          </p>
+        </div>
+
+        {% if result.raw %}
+          <details class="card" style="padding:16px; margin-top:12px;">
+            <summary style="font-weight:700; color:var(--ink-2);">Show raw model output</summary>
+            <pre style="margin-top:10px; padding:14px; background:var(--surface-2);
+              border-radius:var(--radius-md); font-size:0.82rem; overflow-x:auto;
+              white-space:pre-wrap;">{{ result.raw }}</pre>
+          </details>
+        {% endif %}
+
+      {% else %}
+
+        <!-- ── SCORES ── -->
+        <div class="card" style="padding: 24px; margin-bottom: 14px;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+            <div>
+              <h3 style="margin:0; font-size:1.15rem; font-weight:800;">
+                ✅ AI Match Score: {{ result.score }}/100
+              </h3>
+              <p class="muted text-sm" style="margin:5px 0 0;">
+                Higher = stronger alignment with this role.
+              </p>
+            </div>
+            <span class="pill pill-blue">AI judgment</span>
+          </div>
+
+          <!-- AI bar -->
+          <div class="score-bar-track" style="margin-bottom: 20px;">
+            <div class="score-bar-fill" style="
+                width: {{ result.score }}%;
+                background: linear-gradient(90deg, var(--blue), #7c3aed);
+            "></div>
+          </div>
+
+          {% if 'hybrid_score' in result %}
+          <!-- Three score cards -->
+          <div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; margin-bottom:16px;">
+
+            <div style="padding:14px; border-radius:var(--radius-md); background:var(--blue-soft); border:1px solid rgba(61,90,254,0.18); text-align:center;">
+              <p style="margin:0; font-size:0.75rem; font-weight:700; color:var(--blue-dark);">TF-IDF Cosine</p>
+              <p class="muted text-xs" style="margin:3px 0 8px;">Keyword frequency</p>
+              <span style="font-size:1.5rem; font-weight:900; color:var(--blue);">{{ result.tfidf_score }}%</span>
+            </div>
+
+            <div style="padding:14px; border-radius:var(--radius-md); background:var(--green-soft); border:1px solid rgba(0,179,126,0.2); text-align:center;">
+              <p style="margin:0; font-size:0.75rem; font-weight:700; color:#065f46;">Keyword Overlap</p>
+              <p class="muted text-xs" style="margin:3px 0 8px;">Matched vs missing</p>
+              <span style="font-size:1.5rem; font-weight:900; color:var(--green);">{{ result.overlap_score }}%</span>
+            </div>
+
+            <div style="padding:14px; border-radius:var(--radius-md); background:linear-gradient(135deg,var(--blue-soft),rgba(124,58,237,0.07)); border:1px solid rgba(61,90,254,0.2); text-align:center;">
+              <p style="margin:0; font-size:0.75rem; font-weight:700; color:var(--ink);">⭐ Hybrid Score</p>
+              <p class="muted text-xs" style="margin:3px 0 8px;">40% TF-IDF + 60% overlap</p>
+              <span style="font-size:1.5rem; font-weight:900;
+                background:linear-gradient(90deg,var(--blue),#7c3aed);
+                -webkit-background-clip:text; background-clip:text; color:transparent;">
+                {{ result.hybrid_score }}%
+              </span>
+            </div>
+
+          </div>
+
+          <!-- Hybrid bar -->
+          <div class="score-bar-track">
+            <div class="score-bar-fill" style="
+                width: {{ result.hybrid_score }}%;
+                background: linear-gradient(90deg, #6366f1, #0ea5e9);
+            "></div>
+          </div>
+          <p style="margin: 8px 0 0; font-size:0.875rem;">
+            {% if result.hybrid_score >= 60 %}
+              🟢 <strong>Strong match</strong> — your CV aligns well with this role.
+            {% elif result.hybrid_score >= 35 %}
+              🟡 <strong>Moderate match</strong> — add missing keywords to improve alignment.
+            {% else %}
+              🔴 <strong>Low match</strong> — significant keyword and skills gap detected.
+            {% endif %}
+          </p>
+          {% endif %}
+        </div>
+
+        <!-- ── MATCHED + MISSING ── -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+
+          <div class="card" style="padding:18px; background:#f0fdf4; border:1px solid #bbf7d0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+              <h4 style="margin:0; font-size:0.9rem;">✅ Matched keywords</h4>
+              <span class="pill pill-green" style="font-size:0.7rem;">Found</span>
+            </div>
+            {% if result.matched and result.matched|length > 0 %}
+              <ul style="margin:0 0 0 16px; padding:0;">
+                {% for k in result.matched %}
+                  <li style="margin:5px 0; font-size:0.875rem; color:var(--ink);">{{ k }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="muted text-sm" style="margin:0;">No strong keyword matches detected.</p>
+            {% endif %}
+          </div>
+
+          <div class="card" style="padding:18px; background:#fff7ed; border:1px solid #fed7aa;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+              <h4 style="margin:0; font-size:0.9rem;">⚠️ Missing keywords</h4>
+              <span class="pill pill-amber" style="font-size:0.7rem;">Add these</span>
+            </div>
+            {% if result.missing and result.missing|length > 0 %}
+              <ul style="margin:0 0 0 16px; padding:0;">
+                {% for k in result.missing %}
+                  <li style="margin:5px 0; font-size:0.875rem; color:var(--ink);">{{ k }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="muted text-sm" style="margin:0;">No major missing keywords detected.</p>
+            {% endif %}
+          </div>
+
+        </div>
+
+        <!-- ── SELECTABLE IMPROVE CTA ── -->
+        <div class="card" style="padding: 22px; margin-bottom: 14px; border: 1.5px solid rgba(0,179,126,0.3);">
+
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+            <div>
+              <p style="margin:0; font-weight:800; font-size:1rem; color:var(--ink);">
+                🚀 Apply suggestions to your CV
+              </p>
+              <p class="muted text-sm" style="margin:4px 0 0;">
+                Tick what you want the AI to focus on, then send directly to the CV Improver.
+              </p>
+            </div>
+            <span class="pill pill-green">Guided improvement</span>
+          </div>
+
+          <form method="get" action="{{ url_for('match_send_to_improve') }}" id="improve-form">
+
+            <!-- Missing keywords -->
+            {% if result.missing and result.missing|length > 0 %}
+            <div style="margin-bottom: 16px;">
+              <p style="margin:0 0 10px; font-weight:700; font-size:0.85rem; color:var(--ink-2);">
+                ⚠️ Missing keywords to add:
+              </p>
+              <div style="display:flex; flex-wrap:wrap; gap:7px;">
+                {% for k in result.missing %}
+                  <label class="check-pill check-amber">
+                    <input type="checkbox" name="keyword" value="{{ k }}" checked>
+                    {{ k }}
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Suggestions -->
+            {% if result.suggestions and result.suggestions|length > 0 %}
+            <div style="margin-bottom: 16px;">
+              <p style="margin:0 0 10px; font-weight:700; font-size:0.85rem; color:var(--ink-2);">
+                🧠 Tailoring suggestions to apply:
+              </p>
+              <div style="display:flex; flex-direction:column; gap:7px;">
+                {% for s in result.suggestions %}
+                  <label class="check-row">
+                    <input type="checkbox" name="suggestion" value="{{ s }}" checked>
+                    <span>{{ s }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+              <div style="
+                margin-top: 8px;
+                padding: 9px 12px;
+                border-radius: var(--radius-md);
+                background: rgba(245,158,11,0.07);
+                border: 1px solid rgba(245,158,11,0.25);
+                display: flex;
+                gap: 7px;
+            ">
+              <span style="font-size:0.85rem; flex-shrink:0;">⏱️</span>
+              <p style="margin:0; font-size:0.76rem; color:#92400e; line-height:1.45;">
+                <strong>Don't apply immediately after improving.</strong>
+                AI detection tools flag CVs submitted within minutes of creation.
+                Save your CV and wait a day before submitting for best results.
+              </p>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding-top:4px;">
+              <button type="button" class="btn btn-ghost" onclick="toggleAll(this)"
+                data-state="all" style="font-size:0.82rem;">
+                Deselect all
+              </button>
+              <button type="submit" class="btn btn-primary" style="padding:0.65rem 1.4rem;">
+                ✨ Improve my CV with selected
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- ── TAILORING SUGGESTIONS (read-only) ── -->
+        <div class="card" style="padding: 22px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+            <h4 style="margin:0; font-size:1rem;">🧠 Full tailoring suggestions</h4>
+            <span class="pill pill-ink">Reference</span>
+          </div>
+          {% if result.suggestions and result.suggestions|length > 0 %}
+            <ul style="margin:0 0 0 18px; padding:0;">
+              {% for s in result.suggestions %}
+                <li style="margin:9px 0; line-height:1.55; font-size:0.9rem;">{{ s }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="muted text-sm" style="margin:0;">No suggestions returned. Try a longer job description.</p>
+          {% endif %}
+        </div>
+
+      {% endif %}
+    </div>
+    <!-- end right col -->
+
+  </div>
+  <!-- end grid -->
+
+</div>
+
+<style>
+  /* Checkbox pills */
+  .check-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    user-select: none;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+
+  .check-pill input[type="checkbox"] {
+    width: 13px;
+    height: 13px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .check-amber {
+    background: var(--amber-soft);
+    border-color: rgba(245,158,11,0.25);
+    color: #92400e;
+  }
+
+  .check-amber:hover { background: rgba(245,158,11,0.18); }
+
+  /* Suggestion row checkboxes */
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    background: var(--surface-2);
+    border: 1px solid var(--border-med);
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--ink-2);
+    transition: all 0.15s;
+    user-select: none;
+    line-height: 1.5;
+  }
+
+  .check-row:hover {
+    background: var(--blue-soft);
+    border-color: rgba(61,90,254,0.25);
+    color: var(--ink);
+  }
+
+  .check-row input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--blue);
+  }
+
+  /* Checked state highlight */
+  .check-row:has(input:checked) {
+    background: var(--blue-soft);
+    border-color: rgba(61,90,254,0.25);
+  }
+
+  .check-amber:has(input:checked) {
+    background: rgba(245,158,11,0.15);
+    border-color: rgba(245,158,11,0.4);
+  }
+
+  /* Responsive: stack on small screens */
+  @media (max-width: 860px) {
+    div[style*="grid-template-columns: 420px"] {
+      grid-template-columns: 1fr !important;
+    }
+    div[style*="position: sticky"] {
+      position: static !important;
+    }
+  }
+</style>
+
+<script>
+function toggleAll(btn) {
+  const form       = btn.closest("form");
+  const checkboxes = form.querySelectorAll("input[type='checkbox']");
+  const isAll      = btn.dataset.state === "all";
+  checkboxes.forEach(cb => cb.checked = !isAll);
+  btn.dataset.state = isAll ? "none" : "all";
+  btn.textContent   = isAll ? "Select all" : "Deselect all";
+}
+</script>
+
+{% endblock %}

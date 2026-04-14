@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card" style="max-width: 1040px; margin:auto;">
+  <h2 style="margin:0 0 6px;">Choose a CV template</h2>
+  <p style="color:#666;margin:0 0 16px;">Pick a layout. You can change it later.</p>
+
+  <form method="post" action="{{ url_for('set_template') }}">
+    <input type="hidden" name="next_page" value="{{ next_page }}">
+
+    <div class="tpl-grid">
+      {% for t in templates %}
+      <label class="tpl-card">
+        <input type="radio" name="template_id" value="{{ t.id }}"
+               {% if t.id == selected %}checked{% endif %}>
+
+        <!-- MINI PREVIEW -->
+        <div class="tpl-thumb {{ t.id }}">
+
+          {% if t.id == "modern" %}
+            <div class="m-head">
+              <div class="m-name">FULL NAME</div>
+              <div class="m-meta">Email | Phone</div>
+            </div>
+            <div class="m-body">
+              <div class="sec">
+                <div class="sec-h">PROFILE</div>
+                <div class="line"></div><div class="line short"></div>
+              </div>
+
+              <div class="sec two">
+                <div>
+                  <div class="sec-h">EXPERIENCE</div>
+                  <div class="bullet"></div><div class="bullet"></div><div class="bullet short"></div>
+                </div>
+                <div>
+                  <div class="sec-h">SKILLS</div>
+                  <div class="pill-row">
+                    <span class="pill">Python</span><span class="pill">SQL</span><span class="pill">Flask</span>
+                  </div>
+                  <div class="pill-row">
+                    <span class="pill">Docker</span><span class="pill">Git</span><span class="pill">APIs</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sec">
+                <div class="sec-h">EDUCATION</div>
+                <div class="line"></div><div class="line short"></div>
+              </div>
+
+              <div class="sec">
+                <div class="sec-h">PROJECTS</div>
+                <div class="bullet"></div><div class="bullet short"></div>
+              </div>
+
+              <div class="sec">
+                <div class="sec-h">CERTIFICATIONS</div>
+                <div class="bullet short"></div>
+              </div>
+            </div>
+
+          {% elif t.id == "classic" %}
+            <div class="c-head">
+              <div class="c-name">FULL NAME</div>
+              <div class="c-meta">Email | Phone</div>
+            </div>
+            <div class="c-body">
+              <div class="c-sec">
+                <div class="c-h">PROFILE</div>
+                <div class="c-bullet"></div><div class="c-bullet short"></div>
+              </div>
+              <div class="c-sec">
+                <div class="c-h">EDUCATION</div>
+                <div class="c-line"></div><div class="c-line short"></div>
+              </div>
+              <div class="c-sec">
+                <div class="c-h">EXPERIENCE</div>
+                <div class="c-bullet"></div><div class="c-bullet"></div><div class="c-bullet short"></div>
+              </div>
+              <div class="c-sec">
+                <div class="c-h">PROJECTS</div>
+                <div class="c-bullet"></div><div class="c-bullet short"></div>
+              </div>
+              <div class="c-sec">
+                <div class="c-h">SKILLS</div>
+                <div class="c-line"></div><div class="c-line short"></div>
+              </div>
+              <div class="c-sec">
+                <div class="c-h">CERTIFICATIONS</div>
+                <div class="c-line short"></div>
+              </div>
+            </div>
+
+          {% else %}
+            <!-- SIDEBAR -->
+            <div class="s-wrap">
+              <div class="s-side">
+                <div class="s-side-h">SKILLS</div>
+                <div class="s-skill"></div><div class="s-skill"></div><div class="s-skill short"></div>
+
+                <div class="s-side-h">CERTIFICATIONS</div>
+                <div class="s-side-line"></div><div class="s-side-line short"></div>
+
+                <div class="s-side-h">EDUCATION</div>
+                <div class="s-side-line"></div><div class="s-side-line short"></div>
+              </div>
+
+              <div class="s-main">
+                <div class="s-name">FULL NAME</div>
+                <div class="s-meta">Email | Phone</div>
+
+                <div class="s-sec">
+                  <div class="s-h">PROFILE</div>
+                  <div class="s-line"></div><div class="s-line short"></div>
+                </div>
+
+                <div class="s-sec">
+                  <div class="s-h">EXPERIENCE</div>
+                  <div class="s-bullet"></div><div class="s-bullet"></div><div class="s-bullet short"></div>
+                </div>
+
+                <div class="s-sec">
+                  <div class="s-h">PROJECTS</div>
+                  <div class="s-bullet"></div><div class="s-bullet short"></div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+        </div>
+
+        <div class="tpl-meta">
+          <div class="tpl-name">{{ t.name }}</div>
+          <div class="tpl-tag">{{ t.tag }}</div>
+        </div>
+      </label>
+      {% endfor %}
+    </div>
+
+    <button class="btn" type="submit" style="margin-top:16px;">Use this template</button>
+  </form>
+</div>
+
+<style>
+/* grid + card */
+.tpl-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; }
+.tpl-card{
+  display:block; background:#fff; border:1px solid #e6e6e6; border-radius:12px; padding:12px;
+  cursor:pointer; transition:transform .08s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.tpl-card:hover{ transform:translateY(-2px); box-shadow:0 12px 22px rgba(0,0,0,.08); border-color:#d0d0d0; }
+.tpl-card input{ display:none; }
+
+/* important: input is BEFORE .tpl-thumb, so use ~ */
+.tpl-card input:checked ~ .tpl-thumb{ outline:3px solid #2563eb; outline-offset:2px; }
+
+.tpl-thumb{
+  height:290px; border-radius:10px; border:1px solid #ddd; overflow:hidden; background:#fafafa;
+}
+.tpl-meta{ margin-top:10px; }
+.tpl-name{ font-weight:700; }
+.tpl-tag{ font-size:.92rem; color:#666; }
+
+/* shared mini elements */
+.line, .c-line, .s-line{ height:8px; background:#e5e7eb; border-radius:6px; margin:6px 0; }
+.line.short, .c-line.short, .s-line.short{ width:65%; }
+
+.bullet, .c-bullet, .s-bullet{
+  height:7px; background:#e5e7eb; border-radius:6px; margin:7px 0; position:relative; padding-left:10px;
+}
+.bullet::before, .c-bullet::before, .s-bullet::before{
+  content:""; position:absolute; left:0; top:2px; width:6px; height:6px; border-radius:50%; background:#c7cdd6;
+}
+.bullet.short, .c-bullet.short, .s-bullet.short{ width:70%; }
+
+.sec-h, .c-h, .s-h{
+  font-size:10px; letter-spacing:.08em; font-weight:800; margin-bottom:6px; color:#6b7280;
+}
+.sec{ padding:10px 12px; }
+.sec.two{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+.pill-row{ display:flex; gap:6px; margin:6px 0; flex-wrap:wrap; }
+.pill{
+  font-size:10px; padding:3px 6px; border-radius:999px;
+  background:#eef2ff; color:#1e3a8a; border:1px solid #e0e7ff;
+}
+
+/* MODERN */
+.tpl-thumb.modern{ background:#fff; }
+.m-head{ background:#2563eb; color:#fff; padding:12px; }
+.m-name{ font-weight:900; font-size:15px; letter-spacing:.02em; }
+.m-meta{ font-size:10px; opacity:.95; margin-top:4px; }
+.m-body{ padding:6px 0; }
+
+/* CLASSIC */
+.tpl-thumb.classic{ background:#fff; }
+.c-head{ padding:14px 12px 10px; border-bottom:1px solid #eee; }
+.c-name{ font-family: "Times New Roman", serif; font-weight:700; font-size:16px; }
+.c-meta{ font-size:10px; color:#6b7280; margin-top:4px; }
+.c-body{ padding:8px 12px; }
+.c-sec{ margin:10px 0; }
+.c-h{ font-size:10px; color:#374151; border-bottom:1px solid #e5e7eb; padding-bottom:4px; margin-bottom:6px; }
+
+/* SIDEBAR */
+.tpl-thumb.sidebar{ background:#fff; }
+.s-wrap{ display:grid; grid-template-columns: 34% 66%; height:100%; }
+.s-side{ background:#0f172a; color:#fff; padding:12px; }
+.s-side-h{ font-size:10px; letter-spacing:.08em; opacity:.9; margin-top:10px; margin-bottom:6px; font-weight:900; }
+.s-side-line{ height:7px; background:rgba(255,255,255,.18); border-radius:6px; margin:6px 0; }
+.s-side-line.short{ width:70%; }
+.s-skill{ height:7px; background:rgba(255,255,255,.18); border-radius:6px; margin:7px 0; }
+.s-skill.short{ width:75%; }
+.s-main{ padding:12px; }
+.s-name{ font-weight:900; font-size:14px; letter-spacing:.02em; }
+.s-meta{ font-size:10px; color:#6b7280; margin-top:4px; }
+.s-sec{ margin:10px 0; }
+</style>
+
+{% endblock %}

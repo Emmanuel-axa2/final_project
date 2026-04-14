@@ -1,0 +1,13 @@
+flask
+flask_sqlalchemy
+flask-session
+python-dotenv
+openai
+groq
+gunicorn
+requests
+reportlab
+pypdf
+python-docx
+weasyprint
+scikit-learn

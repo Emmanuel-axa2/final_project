@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+  <h2>💬 Community Q&amp;A</h2>
+  <p class="muted">Ask a question about CVs, applications, internships, or the AI feedback. Anyone can answer.</p>
+
+  <form method="post" style="margin-top: 1rem;">
+    <label>Ask a question</label>
+    <textarea name="question" rows="3" placeholder="e.g. How do I quantify impact in my project bullets?" required></textarea>
+    <button type="submit" class="btn">Post question</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3 style="margin-top:0;">Recent questions</h3>
+
+  {% if questions and questions|length > 0 %}
+    <ul style="padding-left: 1.1rem; margin: 0;">
+      {% for q in questions %}
+        <li style="margin: 0.75rem 0;">
+          <a href="{{ url_for('question_detail', question_id=q.id) }}">
+            {{ q.text }}
+          </a>
+          <div class="muted" style="font-size:0.85rem; margin-top:0.2rem;">
+            {{ q.answers|length }} answers
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No questions yet — be the first to ask one.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

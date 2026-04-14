@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CV</title>
+
+  <style>
+    body { margin: 24px; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+
+    /* Text templates */
+    .cv-preview{
+      background:#fff;
+      color:#111;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      padding:16px;
+      white-space:pre-wrap;
+      font-size:0.95rem;
+      line-height: 1.35;
+    }
+    .cv-preview.modern{ border-top: 6px solid #4f46e5; font-family: Arial, sans-serif; }
+    .cv-preview.classic{ border-top: 6px solid #111827; font-family: "Times New Roman", serif; }
+
+    /* Sidebar template */
+    .cv{
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:12px;
+      overflow:hidden;
+    }
+    .cv.sidebar{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 420px;
+    }
+    .cv .side{
+      background:#0f172a;
+      color:#fff;
+      padding:16px;
+    }
+    .side-title{ font-weight:800; font-size:16px; margin-bottom:6px; }
+    .side-contact{ font-size:12px; opacity:0.85; margin-bottom:14px; line-height:1.35; }
+    .side-sec{ margin-top:14px; font-size:12px; font-weight:800; letter-spacing:0.08em; opacity:0.95; }
+    .side-list{ margin:8px 0 0 16px; padding:0; font-size:12px; }
+    .side-list li{ margin:6px 0; opacity:0.95; }
+
+    .cv .main{ padding:18px; font-family: Arial, sans-serif; }
+    .cv-sec{ margin: 14px 0 8px; font-weight:800; letter-spacing:0.04em; color:#111827; }
+    .cv-list{ margin:0 0 10px 18px; padding:0; color:#111827; }
+    .cv-list li{ margin:6px 0; }
+  </style>
+</head>
+
+<body>
+  {% if template_id == "sidebar" and cv %}
+    {% include "cv_templates/sidebar.html" %}
+  {% else %}
+    <div class="cv-preview {{ template_id }}">{{ cv_text | e }}</div>
+  {% endif %}
+</body>
+</html>

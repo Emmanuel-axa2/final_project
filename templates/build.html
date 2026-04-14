@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .section-rule {
+    height: 1px;
+    background: var(--rule);
+    margin: 1.5rem 0;
+  }
+
+  .form-section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-300);
+    margin-bottom: 1rem;
+  }
+
+  .tip-box {
+    display: flex;
+    gap: 10px;
+    padding: 0.85rem 1rem;
+    background: var(--accent-muted);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--r-8);
+    font-size: 0.82rem;
+    color: var(--ink-700);
+    line-height: 1.55;
+  }
+
+  .tip-icon {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .cv-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+</style>
+
+<!-- PAGE HEADER -->
+<div style="padding: 2rem 0 1.5rem;">
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
+    <div>
+      <div style="
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+          text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem;">
+        <span style="
+            width: 20px; height: 20px; background: var(--accent-muted);
+            border: 1px solid var(--accent-border); border-radius: var(--r-4);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.75rem;">🧱</span>
+        CV Builder
+      </div>
+      <h1 style="
+          font-family: var(--font-serif); font-size: 2rem; font-weight: 600;
+          letter-spacing: -0.02em; color: var(--ink-900); margin: 0 0 0.5rem; line-height: 1.15;">
+        Build a CV from scratch
+      </h1>
+      <p style="font-size: 0.9rem; color: var(--ink-500); line-height: 1.7; margin: 0; max-width: 480px;">
+        Fill in your details below. The AI will generate a clean, structured CV
+        you can copy or export as a PDF.
+      </p>
+    </div>
+
+    <div class="tip-box" style="max-width: 320px;">
+      <span class="tip-icon">💡</span>
+      <div>
+        <strong style="color: var(--ink-900); font-size: 0.82rem;">Writing tip</strong><br>
+        Use action verbs and quantify impact where possible —
+        e.g. <em>"Reduced processing time by 30%"</em> rather than <em>"Helped with optimisation."</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="card" style="padding: 2rem;">
+  <form method="post">
+
+    <div class="form-section-label">Contact details</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+      <div class="field-group">
+        <label>Full name <span style="color:var(--rose);">*</span></label>
+        <input type="text" name="full_name" placeholder="e.g. Alex Johnson" required>
+      </div>
+      <div class="field-group">
+        <label>Email <span style="color:var(--rose);">*</span></label>
+        <input type="email" name="email" placeholder="alex@email.com" required>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 14px;">
+      <div class="field-group">
+        <label>Phone <span style="color:var(--ink-300); font-weight:400;">(optional)</span></label>
+        <input type="text" name="phone" placeholder="+44 7700 000000">
+      </div>
+      <div class="field-group">
+        <label>LinkedIn <span style="color:var(--ink-300); font-weight:400;">(optional)</span></label>
+        <input type="text" name="linkedin" placeholder="linkedin.com/in/yourname">
+      </div>
+      <div class="field-group">
+        <label>GitHub <span style="color:var(--ink-300); font-weight:400;">(optional)</span></label>
+        <input type="text" name="github" placeholder="github.com/yourname">
+      </div>
+    </div>
+
+    <div style="margin-top: 14px;">
+      <div class="field-group">
+        <label>Website / Portfolio <span style="color:var(--ink-300); font-weight:400;">(optional)</span></label>
+        <input type="text" name="website" placeholder="yourwebsite.com">
+      </div>
+    </div>
+
+    <div class="section-rule"></div>
+    <div class="form-section-label">Profile</div>
+
+    <div class="field-group">
+      <label>Profile summary</label>
+      <textarea name="summary" rows="3"
+        placeholder="A short paragraph about who you are, what you're studying or doing, and what you're looking for."></textarea>
+    </div>
+
+    <div class="section-rule"></div>
+    <div class="form-section-label">Background</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+      <div class="field-group">
+        <label>Education</label>
+        <textarea name="education" rows="5"
+          placeholder="Degree title, university name, graduation year, relevant modules or grade."></textarea>
+      </div>
+      <div class="field-group">
+        <label>Experience</label>
+        <textarea name="experience" rows="5"
+          placeholder="Job title, company, dates, and 2–3 bullet points of what you did and achieved."></textarea>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px;">
+      <div class="field-group">
+        <label>Projects</label>
+        <textarea name="projects" rows="5"
+          placeholder="University or personal projects — what it was, what you built, and what technologies you used."></textarea>
+      </div>
+      <div class="field-group">
+        <label>Skills</label>
+        <textarea name="skills" rows="5"
+          placeholder="Technical: Python, SQL, React&#10;Soft skills: Communication, teamwork&#10;Tools: Git, Figma, Excel"></textarea>
+      </div>
+    </div>
+
+    <div class="section-rule"></div>
+    <div class="form-section-label">Role &amp; extras</div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+      <div class="field-group">
+        <label>Target job role <span style="color:var(--rose);">*</span></label>
+        <input type="text" name="target_role" placeholder="e.g. Graduate Software Engineer">
+      </div>
+      <div class="field-group">
+        <label>Certifications <span style="color:var(--ink-300); font-weight:400;">(optional)</span></label>
+        <textarea name="certifications" rows="3"
+          placeholder="e.g. AWS Cloud Practitioner (2024), Google Data Analytics Certificate"></textarea>
+      </div>
+    </div>
+
+    <div style="
+        display: flex; justify-content: flex-end; align-items: center;
+        gap: 10px; margin-top: 1.75rem; padding-top: 1.25rem;
+        border-top: 1px solid var(--rule);">
+      <span style="font-size: 0.78rem; color: var(--ink-300);">
+        Fields marked <span style="color:var(--rose);">*</span> are required
+      </span>
+      <button type="submit" class="btn btn-primary btn-lg">
+        Generate CV →
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<!-- CV PREVIEW -->
+{% if generated_cv %}
+<div style="margin-top: 2rem;" class="fade-up">
+
+  <!-- Preview header -->
+  <div style="
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+    <div>
+      <div class="form-section-label" style="margin-bottom: 0.3rem;">Output</div>
+      <h2 style="
+          font-family: var(--font-serif); font-size: 1.5rem; font-weight: 600;
+          letter-spacing: -0.01em; color: var(--ink-900); margin: 0;">
+        Your generated CV
+      </h2>
+      <p style="font-size: 0.845rem; color: var(--ink-500); margin: 0.35rem 0 0; line-height: 1.5;">
+        Review below — copy the text, download a PDF, or try a different template.
+      </p>
+    </div>
+
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+      <a class="btn btn-outline btn-sm cv-action-btn" href="{{ url_for('choose_template', next='build') }}">
+        🎨 Change template
+      </a>
+      <button type="button" class="btn btn-outline btn-sm cv-action-btn" onclick="copyTemplateText(this)">
+        Copy text
+      </button>
+      <a class="btn btn-primary btn-sm cv-action-btn" href="{{ url_for('download_cv_pdf') }}">
+        ⬇ Download PDF
+      </a>
+    </div>
+  </div>
+
+  <!-- Preview card -->
+  <div class="card" style="padding: 0; overflow: hidden;">
+
+    <!-- Window bar -->
+    <div style="
+        padding: 10px 16px; background: var(--surface-inset);
+        border-bottom: 1px solid var(--rule);
+        display: flex; align-items: center; gap: 6px;">
+      <div style="width:10px;height:10px;border-radius:50%;background:#ef4444;"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;"></div>
+      <div style="width:10px;height:10px;border-radius:50%;background:#22c55e;"></div>
+      <span style="
+          margin-left: 10px; font-size: 0.72rem; color: var(--ink-300);
+          font-family: var(--font-code); letter-spacing: 0.02em;">
+        cv_preview · generated
+      </span>
+      {% if inference_time %}
+      <span style="
+          margin-left: auto; font-size: 0.72rem;
+          color: var(--ink-300); font-family: var(--font-code);">
+        ⏱ {{ inference_time }}s
+      </span>
+      {% endif %}
+    </div>
+
+    <div style="padding: 1.75rem;" id="cv-preview">
+      {% if template_id == "sidebar" and cv %}
+        {% include "cv_templates/sidebar.html" %}
+      {% else %}
+        <div class="cv-preview {{ template_id }}" style="white-space: pre-wrap;">{{ generated_cv | e }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Want a stronger CV nudge -->
+  <div style="
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; margin-top: 1.25rem; padding: 1rem 1.25rem;
+      background: var(--accent-muted); border: 1px solid var(--accent-border);
+      border-radius: var(--r-8); flex-wrap: wrap;">
+    <div>
+      <p style="font-size: 0.845rem; font-weight: 600; color: var(--ink-900); margin: 0 0 0.2rem;">
+        Want a stronger CV?
+      </p>
+      <p style="font-size: 0.8rem; color: var(--ink-500); margin: 0; line-height: 1.5;">
+        Run a job match to see how well your CV aligns with a role, or use the improver to refine language and boost impact.
+      </p>
+    </div>
+    <div style="display: flex; gap: 8px; flex-shrink: 0;">
+      <a href="{{ url_for('improve_cv') }}" class="btn btn-outline btn-sm">✨ Improve CV</a>
+      <a href="{{ url_for('match_job') }}" class="btn btn-primary btn-sm">🎯 Job Match</a>
+    </div>
+  </div>
+
+  <!-- AI Detection warning -->
+  <div style="
+      margin-top: 0.75rem; padding: 10px 14px;
+      border-radius: var(--r-8); background: var(--gold-muted);
+      border: 1px solid var(--gold-rule); display: flex; gap: 8px;">
+    <span style="font-size:0.85rem; flex-shrink:0;">⏱️</span>
+    <p style="margin:0; font-size:0.76rem; color:var(--gold); line-height:1.5;">
+      <strong>Don't apply immediately after generating.</strong>
+      AI detection tools flag CVs submitted within minutes of creation.
+      Save your CV and wait at least a day before submitting for best results.
+    </p>
+  </div>
+
+  <p style="margin-top: 0.75rem; font-size: 0.78rem; color: var(--ink-300); text-align: right;">
+    If spacing looks tight, try a different template or shorten long paragraphs.
+  </p>
+
+</div>
+{% endif %}
+
+<script>
+function copyTemplateText(btn) {
+  const el = document.getElementById("cv-preview");
+  if (!el) return;
+  const text = el.innerText || el.textContent || '';
+  navigator.clipboard.writeText(text).then(() => {
+    const prev = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = prev; }, 1500);
+  });
+}
+</script>
+
+{% endblock %}

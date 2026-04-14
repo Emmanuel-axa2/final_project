@@ -1,0 +1,482 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="max-width: 1060px; margin: 0 auto;">
+
+  <!-- Header -->
+  <div class="card fade-up" style="padding: 26px; margin-bottom: 16px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div>
+        <span class="pill pill-blue" style="margin-bottom:10px;">✨ CV Improver</span>
+        <h1 style="margin:10px 0 8px; font-size:1.75rem; font-weight:800;">Improve my CV</h1>
+        <p class="muted" style="margin:0; line-height:1.7; max-width:560px;">
+          Upload a CV (PDF/DOCX/TXT) or paste text. We'll improve structure, clarity, and role alignment.
+        </p>
+      </div>
+      {% if prefill_notes %}
+        <div style="
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            background: var(--green-soft);
+            border: 1px solid rgba(0,179,126,0.25);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 320px;
+        ">
+          <span style="font-size:1.3rem;">🎯</span>
+          <div>
+            <p style="margin:0; font-weight:700; font-size:0.85rem; color:#065f46;">
+              Job match instructions imported
+            </p>
+            <p style="margin:2px 0 0; font-size:0.78rem; color:#064e3b; line-height:1.4;">
+              The AI will use your selected keywords and suggestions.
+            </p>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ── MAIN GRID ── -->
+  <div style="display:grid; grid-template-columns: 460px 1fr; gap: 16px; align-items: start;">
+
+    <!-- LEFT: Form (sticky) -->
+    <div style="position: sticky; top: 78px;">
+      <div class="card fade-up-2" style="padding: 24px;">
+        <h3 style="margin:0 0 16px; font-size:1rem; font-weight:800;">📋 Your CV details</h3>
+
+        <form method="post" enctype="multipart/form-data">
+
+          <!-- File upload -->
+          <div style="
+              padding: 14px;
+              border-radius: var(--radius-md);
+              background: var(--surface-2);
+              border: 1.5px dashed var(--border-med);
+              margin-bottom: 14px;
+          ">
+            <label style="margin-bottom:8px;">Upload CV (PDF / DOCX / TXT)</label>
+            <input id="cv_file" type="file" name="cv_file" accept=".pdf,.docx,.txt"
+              style="background:var(--surface); border-style:solid;">
+            <div style="display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap:wrap;">
+              <span class="muted text-xs" id="file_name">No file selected</span>
+              <button type="button" class="btn btn-ghost" id="clear_file"
+                style="padding:0.25rem 0.6rem; font-size:0.75rem;">✕ Remove</button>
+            </div>
+          </div>
+
+          <!-- Paste CV -->
+          <div style="margin-bottom:14px;">
+            <label>Or paste your CV text</label>
+            <textarea name="cv_text" rows="8"
+              placeholder="Paste your CV text here..."
+              style="margin-top:6px;">{{ prefill_cv_text }}</textarea>
+          </div>
+
+          <!-- Target role -->
+          <div style="margin-bottom:14px;">
+            <label>Target role <span class="muted text-sm">(required)</span></label>
+            <input type="text" name="target_role"
+              placeholder="e.g. Graduate Software Engineer"
+              value="{{ prefill_target_role }}"
+              style="margin-top:6px;"
+              required>
+          </div>
+
+          <!-- ✅ Job match instructions panel OR normal tip -->
+          {% if prefill_notes %}
+          <div style="
+              margin-bottom: 16px;
+              border-radius: var(--radius-md);
+              border: 1.5px solid rgba(0,179,126,0.3);
+              overflow: hidden;
+          ">
+            <div style="
+                padding: 10px 14px;
+                background: var(--green-soft);
+                border-bottom: 1px solid rgba(0,179,126,0.2);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                flex-wrap: wrap;
+            ">
+              <div style="display:flex; align-items:center; gap:7px;">
+                <span>🎯</span>
+                <p style="margin:0; font-weight:700; font-size:0.82rem; color:#065f46;">
+                  Instructions from Job Match
+                </p>
+              </div>
+              <span class="pill pill-green" style="font-size:0.7rem;">AI will follow these</span>
+            </div>
+
+            <div style="padding:12px 14px; background:var(--surface); max-height:220px; overflow-y:auto;">
+              <p class="muted text-xs" style="margin:0 0 8px;">
+                The AI will rewrite your CV using these specific instructions:
+              </p>
+              <ul style="margin:0 0 0 14px; padding:0;">
+                {% for line in prefill_notes.split('\n') %}
+                  {% if line.strip() %}
+                    <li style="
+                        margin:5px 0;
+                        font-size:0.82rem;
+                        color:var(--ink-2);
+                        line-height:1.5;
+                    ">{{ line.strip().lstrip('-').strip() }}</li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+              <p class="muted text-xs" style="margin:10px 0 0;">
+                Not what you want?
+                <a href="{{ url_for('match_job') }}"
+                  style="color:var(--blue); font-weight:600;">
+                  Go back to change selection
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {% else %}
+          <!-- Normal tip -->
+          <div style="
+              margin-bottom: 16px;
+              padding: 12px 14px;
+              border-radius: var(--radius-md);
+              background: var(--blue-soft);
+              border: 1px solid rgba(61,90,254,0.15);
+          ">
+            <p style="margin:0; font-weight:700; font-size:0.82rem; color:var(--blue-dark);">💡 Tip</p>
+            <p style="margin:5px 0 0; font-size:0.8rem; color:var(--ink-2); line-height:1.5;">
+              For best results, first run a
+              <a href="{{ url_for('match_job') }}"
+                style="color:var(--blue); font-weight:600;">Job Match</a>
+              to identify missing keywords, then come back here with targeted suggestions.
+            </p>
+          </div>
+          {% endif %}
+
+          <!-- What we fix -->
+          <div style="
+              margin-bottom: 16px;
+              padding: 10px 14px;
+              border-radius: var(--radius-md);
+              background: var(--surface-2);
+              border: 1px solid var(--border);
+              display: flex;
+              flex-wrap: wrap;
+              gap: 10px 18px;
+          ">
+            <span class="text-xs muted" style="display:flex; align-items:center; gap:5px;">
+              <span style="color:var(--green);">✓</span> Structure &amp; clarity
+            </span>
+            <span class="text-xs muted" style="display:flex; align-items:center; gap:5px;">
+              <span style="color:var(--green);">✓</span> Grammar &amp; tone
+            </span>
+            <span class="text-xs muted" style="display:flex; align-items:center; gap:5px;">
+              <span style="color:var(--green);">✓</span> Keyword alignment
+            </span>
+            <span class="text-xs muted" style="display:flex; align-items:center; gap:5px;">
+              <span style="color:var(--green);">✓</span> Impact statements
+            </span>
+            <span class="text-xs muted" style="display:flex; align-items:center; gap:5px;">
+              <span style="color:var(--green);">✓</span> Contact preserved
+            </span>
+          </div>
+            <!-- AI Detection warning -->
+            <div style="
+                margin-bottom: 16px;
+                padding: 10px 14px;
+                border-radius: var(--radius-md);
+                background: rgba(245,158,11,0.07);
+                border: 1px solid rgba(245,158,11,0.25);
+            ">
+              <p style="margin:0; font-weight:700; font-size:0.78rem; color:#92400e;">
+                ⏱️ Tip — avoid immediate submission
+              </p>
+              <p style="margin:4px 0 0; font-size:0.76rem; color:#78350f; line-height:1.5;">
+                AI detection tools flag CVs submitted immediately after creation.
+                Save your improved CV and wait at least a day before applying —
+                the content will be identical but the timing flag disappears entirely.
+              </p>
+            </div>
+          <!-- Hidden field -->
+          <input type="hidden" name="match_notes" value="{{ prefill_notes }}">
+
+          <button type="submit" class="btn btn-primary" style="width:100%; padding:0.7rem;">
+            {% if prefill_notes %}
+              🎯 Improve CV with job match instructions
+            {% else %}
+              ✨ Analyse &amp; Improve
+            {% endif %}
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div class="fade-up-3">
+
+      {% if not result %}
+        <!-- Empty state -->
+        <div class="card" style="
+            padding: 56px 32px;
+            text-align: center;
+            border: 1.5px dashed var(--border-med);
+            background: var(--surface-2);
+        ">
+          <div style="font-size:2.5rem; margin-bottom:14px;">✨</div>
+          <h3 style="margin:0 0 8px; color:var(--ink-2);">No results yet</h3>
+          <p class="muted text-sm" style="margin:0 auto; max-width:300px; line-height:1.6;">
+            Fill in your CV details on the left and click
+            <strong>Analyse &amp; Improve</strong> to see your improved CV here.
+          </p>
+          {% if not prefill_notes %}
+          <div style="margin-top:20px;">
+            <a href="{{ url_for('match_job') }}" class="btn btn-outline"
+              style="font-size:0.85rem;">
+              🎯 Run a job match first →
+            </a>
+          </div>
+          {% endif %}
+        </div>
+
+      {% elif result.error %}
+        <div class="card" style="
+            padding: 18px;
+            border-left: 4px solid var(--red);
+            background: rgba(239,68,68,0.06);
+        ">
+          <p style="margin:0; color:#7f1d1d;">
+            <strong>⚠️ Error:</strong> {{ result.error }}
+          </p>
+        </div>
+
+      {% else %}
+
+        <!-- Result header -->
+        <div style="
+            border-radius: var(--radius-xl);
+            background: linear-gradient(135deg,
+              rgba(0,179,126,0.08),
+              rgba(61,90,254,0.06),
+              rgba(124,58,237,0.07));
+            border: 1px solid rgba(0,179,126,0.15);
+            padding: 18px;
+            margin-bottom: 14px;
+        ">
+          <div class="card" style="padding:24px;">
+
+            <!-- Actions row -->
+            <div style="margin-top:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span class="text-sm muted">Confidence:</span>
+              <span class="pill
+                {% if result.confidence == 'High' %}pill-green
+                {% elif result.confidence == 'Low' %}pill-amber
+                {% else %}pill-blue{% endif %}">
+                {{ result.confidence }}
+              </span>
+              {% if prefill_notes %}
+                <span class="pill pill-green" style="font-size:0.72rem;">
+                  🎯 Job-match guided
+                </span>
+              {% endif %}
+              {% if inference_time %}
+                <span style="
+                    font-size: 0.72rem;
+                    color: var(--ink-300);
+                    font-family: var(--font-code);">
+                  ⏱ {{ inference_time }}s
+                </span>
+              {% endif %}
+            </div>
+              </div>
+
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-outline" id="copy_btn"
+                  onclick="copyTemplateText()">
+                  Copy text
+                </button>
+                <a class="btn btn-outline"
+                  href="{{ url_for('choose_template', next='improve') }}">
+                  🎨 Template
+                </a>
+                <a class="btn btn-primary"
+                  href="{{ url_for('download_cv_pdf') }}">
+                  ⬇ Download PDF
+                </a>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- CV Preview -->
+            <div style="
+                border-radius: var(--radius-md);
+                overflow: hidden;
+                border: 1px solid var(--border);
+                box-shadow: var(--shadow-sm);
+            ">
+              <div id="cv-preview">
+                {% if template_id == "sidebar" and cv %}
+                  {% include "cv_templates/sidebar.html" %}
+                {% else %}
+                  <div class="cv-preview {{ template_id }}"
+                    style="white-space:pre-wrap; padding:20px;">
+                    {{ result.improved_cv_only | e }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Weaknesses Fixed -->
+            {% if result.weaknesses_fixed %}
+            <div style="
+                margin-top: 18px;
+                padding: 16px 18px;
+                border-radius: var(--radius-md);
+                background: var(--green-soft);
+                border: 1px solid rgba(0,179,126,0.2);
+            ">
+              <p style="margin:0 0 10px; font-weight:700; color:#065f46; font-size:0.9rem;">
+                ✅ Weaknesses Fixed
+              </p>
+              <ul style="padding-left:1.2rem; margin:0; line-height:1.8;">
+                {% for w in result.weaknesses_fixed %}
+                  <li style="margin-bottom:0.4rem; color:#064e3b; font-size:0.875rem;">
+                    {{ w }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+          </div>
+        </div>
+
+        <!-- Suggestions -->
+        {% if result.suggestions %}
+        <div class="card" style="padding:22px; margin-bottom:14px;">
+          <h3 style="margin:0 0 12px; font-size:1rem;">
+            💡 Suggestions for Further Improvement
+          </h3>
+          <ul style="padding-left:1.2rem; margin:0; line-height:1.8;">
+            {% for s in result.suggestions %}
+              <li style="margin-bottom:0.6rem; font-size:0.9rem;">{{ s }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <!-- Next step nudge -->
+        {% if prefill_notes %}
+          <!-- Came from match — nudge to re-run match to verify improvement -->
+          <div style="
+              padding: 16px 20px;
+              border-radius: var(--radius-md);
+              background: var(--blue-soft);
+              border: 1px solid rgba(61,90,254,0.18);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              flex-wrap: wrap;
+              gap: 12px;
+          ">
+            <div>
+              <p style="margin:0; font-weight:700; color:var(--ink);">
+                📊 Want to verify the improvement?
+              </p>
+              <p class="muted text-sm" style="margin:4px 0 0;">
+                Run a job match again with your improved CV to see how much your score increased.
+              </p>
+            </div>
+            <a href="{{ url_for('match_job') }}" class="btn btn-outline"
+              style="white-space:nowrap;">
+              Re-run job match →
+            </a>
+          </div>
+        {% else %}
+          <!-- Didn't come from match — nudge to run one -->
+          <div style="
+              padding: 16px 20px;
+              border-radius: var(--radius-md);
+              background: var(--blue-soft);
+              border: 1px solid rgba(61,90,254,0.18);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              flex-wrap: wrap;
+              gap: 12px;
+          ">
+            <div>
+              <p style="margin:0; font-weight:700; color:var(--ink);">
+                🎯 Want to check this against a job?
+              </p>
+              <p class="muted text-sm" style="margin:4px 0 0;">
+                Run a job match to see how well your improved CV aligns with a specific role.
+              </p>
+            </div>
+            <a href="{{ url_for('match_job') }}" class="btn btn-primary"
+              style="white-space:nowrap;">
+              Run job match →
+            </a>
+          </div>
+        {% endif %}
+
+      {% endif %}
+    </div>
+    <!-- end right col -->
+
+  </div>
+  <!-- end grid -->
+
+</div>
+
+<style>
+  @media (max-width: 860px) {
+    div[style*="grid-template-columns: 460px"] {
+      grid-template-columns: 1fr !important;
+    }
+    div[style*="position: sticky"] {
+      position: static !important;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  const fileInput = document.getElementById("cv_file");
+  const fileName  = document.getElementById("file_name");
+  const clearBtn  = document.getElementById("clear_file");
+  if (!fileInput || !fileName || !clearBtn) return;
+
+  function updateLabel() {
+    fileName.textContent = (fileInput.files && fileInput.files[0])
+      ? fileInput.files[0].name
+      : "No file selected";
+  }
+
+  fileInput.addEventListener("change", updateLabel);
+  clearBtn.addEventListener("click", function () {
+    fileInput.value = "";
+    updateLabel();
+  });
+  updateLabel();
+})();
+
+function copyTemplateText() {
+  const el  = document.getElementById("cv-preview");
+  const btn = document.getElementById("copy_btn");
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    if (btn) {
+      const old = btn.innerText;
+      btn.innerText = "Copied ✓";
+      setTimeout(() => btn.innerText = old, 1400);
+    }
+  });
+}
+</script>
+
+{% endblock %}
